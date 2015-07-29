@@ -16,7 +16,8 @@ type handler struct {
 	bot *telebot.Bot
 }
 
-func Handler(bot *telebot.Bot, cmds []string, size int) *handler {
+// CreateHandler creates message handler which can handle up to `size` messages simutaneously.
+func CreateHandler(bot *telebot.Bot, cmds []string, size int) *handler {
 	ret := &handler{
 		cmds,
 		make(chan *runner, size),
@@ -24,21 +25,29 @@ func Handler(bot *telebot.Bot, cmds []string, size int) *handler {
 	}
 
 	for i := 0; i < size; i++ {
-		ret.queue <- Runner(ret.cmds, bot)
+		ret.queue <- createRunner(ret.cmds, bot)
 	}
 
 	return ret
 }
 
+// Process command, should run in new goroutine
 func (h *handler) Process(bot *telebot.Bot, msg telebot.Message) {
 	r := <-h.queue
 	r.Run(msg)
-	h.queue <- Runner(h.cmds, bot)
+	h.queue <- createRunner(h.cmds, bot)
 }
 
-type reply struct {
+// Reply is data structure which worker program returned.
+type Reply struct {
+	// Type is message type, one of "text", "doc", "audio", "video" or "photo".
+	// You can omit this field for text message.
 	Type string `json:"type"`
+
+	// User specification which is defined in https://core.telegram.org/bots/api/#user and https://core.telegram.org/bots/api/#groupchat
 	User *telebot.User `json:"user"`
+
+	// Content is message body for text message, or file name for other message type
 	Content string `json:"content"`
 }
 
@@ -48,7 +57,7 @@ type runner struct {
 	bot *telebot.Bot
 }
 
-func Runner(cmds []string, bot *telebot.Bot) *runner {
+func createRunner(cmds []string, bot *telebot.Bot) *runner {
 	cmd := cmds[0]
 	args := cmds[1:]
 	return &runner{exec.Command(cmd, args...), bot}
@@ -75,7 +84,7 @@ func (r *runner) Run(msg telebot.Message) {
 	}
 
 	if data, _ := ioutil.ReadAll(stdout); string(data) != "" {
-		var reps []reply
+		var reps []Reply
 		if err := json.Unmarshal(data, &reps); err == nil {
 			for _, rep := range reps {
 				r.handleReply(msg, &rep)
@@ -84,7 +93,7 @@ func (r *runner) Run(msg telebot.Message) {
 	}
 }
 
-func (r *runner) handleReply(msg telebot.Message, rep *reply) {
+func (r *runner) handleReply(msg telebot.Message, rep *Reply) {
 	if rep.User == nil {
 		rep.User = &msg.Chat
 	}
