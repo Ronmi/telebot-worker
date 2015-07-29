@@ -16,7 +16,13 @@ go build
 
 This program will run command in sub-process, and feed received telegram messge in json format through STDIN.
 
-You command have to read the json data from STDIN, and write reply message to STDOUT.
+You command have to read the json data from STDIN, and write reply message (json format) to STDOUT.
+
+## Return in json format
+
+ - type: Message type. String of "text", "doc", "audio", "video", "photo"
+ - user: Recipent. See https://core.telegram.org/bots/api/#user
+ - content: Message body for text message, or filename for other type of message.
 
 ## php hello world example
 
@@ -24,8 +30,12 @@ You command have to read the json data from STDIN, and write reply message to ST
 <?php
 // this file is named "handler.php"
 
-$data = json_decode(file_get_contents("php://input"), true);
-echo "Hello, " + $data["from"]["first_name"] + " " + $data["from"]["last_name"];
+$data = json_decode(file_get_contents("php://stdin"), true);
+$ret = array(
+    "content" => "/path/to/hello/world.jpg"
+    "type" => "photo"
+);
+echo json_encode($ret)
 ```
 
 ```sh

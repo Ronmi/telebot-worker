@@ -41,7 +41,7 @@ func main() {
 	messages := make(chan telebot.Message)
 	bot.Listen(messages, 1*time.Second)
 
-	h := Handler(args, *max_worker)
+	h := Handler(bot, args, *max_worker)
 	log.Printf("Workers: %d\n", *max_worker)
 
 	for msg := range messages {
