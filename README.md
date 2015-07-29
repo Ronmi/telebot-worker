@@ -20,9 +20,13 @@ You command have to read the json data from STDIN, and write reply message (json
 
 ## Return in json format
 
+Returned data have to be an array of objects, which contain these fields:
+
  - type: Message type. String of "text", "doc", "audio", "video", "photo"
- - user: Recipent. See https://core.telegram.org/bots/api/#user
+ - user: Recipent. See [User](https://core.telegram.org/bots/api/#user) and [GroupChat](https://core.telegram.org/bots/api/#groupchat)
  - content: Message body for text message, or filename for other type of message.
+
+You can omit `user` field for replying to original user, or omit type for text message.
 
 ## php hello world example
 

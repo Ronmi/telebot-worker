@@ -75,9 +75,11 @@ func (r *runner) Run(msg telebot.Message) {
 	}
 
 	if data, _ := ioutil.ReadAll(stdout); string(data) != "" {
-		var rep reply
-		if err := json.Unmarshal(data, &rep); err == nil {
-			r.handleReply(msg, &rep)
+		var reps []reply
+		if err := json.Unmarshal(data, &reps); err == nil {
+			for _, rep := range reps {
+				r.handleReply(msg, &rep)
+			}
 		}
 	}
 }
