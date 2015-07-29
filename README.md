@@ -25,7 +25,7 @@ You command have to read the json data from STDIN, and write reply message to ST
 // this file is named "handler.php"
 
 $data = json_decode(file_get_contents("php://input"), true);
-echo "Hello, " + $data["from"]["first_name"] + " " $data["from"]["last_name"]+ ;
+echo "Hello, " + $data["from"]["first_name"] + " " + $data["from"]["last_name"];
 ```
 
 ```sh

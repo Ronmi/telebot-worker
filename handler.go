@@ -46,14 +46,12 @@ func Runner(cmds []string) *runner {
 
 func (r *runner) Run(bot *telebot.Bot, msg telebot.Message) {
 	stdin, err := r.cmd.StdinPipe()
-	if err == nil {
-	} else {
+	if err != nil {
 		log.Print(err)
 	}
 
 	stdout, err := r.cmd.StdoutPipe()
-	if err == nil {
-	} else {
+	if err != nil {
 		log.Print(err)
 	}
 
