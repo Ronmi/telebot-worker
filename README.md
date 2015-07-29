@@ -37,10 +37,10 @@ You can omit `user` field for replying to original user, or omit type for text m
 // this file is named "handler.php"
 
 $data = json_decode(file_get_contents("php://stdin"), true);
-$ret = array(
+$ret = array(array(
     "content" => "/path/to/hello/world.jpg"
     "type" => "photo"
-);
+));
 echo json_encode($ret)
 ```
 
