@@ -1,5 +1,7 @@
 # telebot-worker
 
+[![Build Status](https://travis-ci.org/Ronmi/telebot-worker.svg?branch=master)](https://travis-ci.org/Ronmi/telebot-worker)
+
 A simple telegram bot wrapper focus on text messages.
 
 This program is mean to provide aids to people who writing php or any other language which does not suitable to make telegram bot.
