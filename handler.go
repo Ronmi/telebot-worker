@@ -13,7 +13,7 @@ import (
 type handler struct {
 	cmds  []string
 	queue chan *runner
-	bot *telebot.Bot
+	bot   *telebot.Bot
 }
 
 // CreateHandler creates message handler which can handle up to `size` messages simutaneously.
@@ -50,7 +50,6 @@ type Reply struct {
 	// Content is message body for text message, or file name for other message type
 	Content string `json:"content"`
 }
-
 
 type runner struct {
 	cmd *exec.Cmd
